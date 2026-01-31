@@ -26,6 +26,10 @@ public class CustomerService {
             throw new RuntimeException("CPF Inválido");
         }
 
+        if (customerRepository.existsByCpf(request.getCpf())) {
+            throw new RuntimeException("CPF já cadastrado");
+        }
+
         Map<String, Object> address = fetchAddressByCep(request.getCep());
 
         Customer customer = Customer.builder()
@@ -57,6 +61,10 @@ public class CustomerService {
 
         if (!isValidCpf(request.getCpf())) {
             throw new RuntimeException("CPF Inválido");
+        }
+
+        if (!customer.getCpf().equals(request.getCpf()) && customerRepository.existsByCpf(request.getCpf())) {
+            throw new RuntimeException("CPF já cadastrado");
         }
 
         if (!customer.getCep().equals(request.getCep())) {

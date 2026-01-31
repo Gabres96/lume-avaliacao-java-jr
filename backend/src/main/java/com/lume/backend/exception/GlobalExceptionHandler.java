@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
-        if ("CPF Inválido".equals(e.getMessage())) {
+        if ("CPF Inválido".equals(e.getMessage()) || "CPF já cadastrado".equals(e.getMessage())) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
 
