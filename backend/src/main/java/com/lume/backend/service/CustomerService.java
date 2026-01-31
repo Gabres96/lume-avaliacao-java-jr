@@ -62,9 +62,6 @@ public class CustomerService {
     }
 
     private boolean isValidCpf(String cpf) {
-        if (cpf == null) return false;
-        cpf = cpf.replaceAll("\\D", "");
-        if (cpf.length() != 11 || cpf.matches("(\\d)\\1{10}")) return false;
-        return true;
+        return com.lume.backend.util.CpfValidator.isValid(cpf);
     }
 }
