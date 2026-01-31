@@ -1,0 +1,41 @@
+package controller;
+
+import dto.CustomerRequest;
+import dto.CustomerResponseDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import service.CustomerService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/customers")
+public class CustomerController {
+
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @PostMapping
+    public ResponseEntity<CustomerResponseDTO> create(@RequestBody CustomerRequest request) {
+        return ResponseEntity.ok(customerService.createCustomer(request));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerResponseDTO>> findAll() {
+        return ResponseEntity.ok(customerService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.findById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        customerService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
