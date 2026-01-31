@@ -10,8 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,19 +35,32 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return email;
+    public String getPassword() {
+        return this.password;
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public String getUsername() {
+        return this.email;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

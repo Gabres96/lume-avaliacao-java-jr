@@ -9,4 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
+    private String refreshToken;
+    private String type = "Bearer";
+    private Long id;
+    private String email;
 }
