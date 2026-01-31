@@ -2,6 +2,7 @@ package com.lume.backend.controller;
 
 import com.lume.backend.dto.CustomerRequest;
 import com.lume.backend.dto.CustomerResponseDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.lume.backend.service.CustomerService;
@@ -10,11 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
+@SecurityRequirement(name = "Bearer Authentication")
 public class CustomerController {
 
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
+
         this.customerService = customerService;
     }
 

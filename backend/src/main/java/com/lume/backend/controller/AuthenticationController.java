@@ -1,10 +1,18 @@
 package com.lume.backend.controller;
 
-import com.lume.backend.dto.AuthenticationResponse;
-import com.lume.backend.dto.LoginRequest;
-import com.lume.backend.dto.RegisterRequest;
+import com.lume.backend.dto.*;
+import com.lume.backend.entity.RefreshToken;
+import com.lume.backend.entity.User;
+import com.lume.backend.repository.UserRepository;
+import com.lume.backend.security.JwtUtils;
 import com.lume.backend.service.AuthenticationService;
+import com.lume.backend.service.RefreshTokenService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +22,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    JwtUtils jwtUtils,
+                                    RefreshTokenService refreshTokenService,
+                                    AuthenticationService authenticationService,
+                                    UserRepository userRepository) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+        this.refreshTokenService = refreshTokenService;
         this.authenticationService = authenticationService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
@@ -27,8 +47,51 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
-        AuthenticationResponse response = authenticationService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User userDetails = (User) authentication.getPrincipal();
+
+        String jwt = jwtUtils.generateJwtToken(userDetails);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        return ResponseEntity.ok(new AuthenticationResponse(
+                jwt,
+                refreshToken.getToken(),
+                "Bearer",
+                userDetails.getId(),
+                userDetails.getEmail()
+        ));
+    }
+
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new RuntimeException("Refresh token não encontrado no banco ou expirado!"));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        org.springframework.security.core.Authentication authentication =
+                org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        userRepository.findByEmail(email).ifPresent(user -> {
+            refreshTokenService.deleteByUserId(user.getId());
+        });
+
+        return ResponseEntity.ok("Logout realizado com sucesso!");
     }
 }
