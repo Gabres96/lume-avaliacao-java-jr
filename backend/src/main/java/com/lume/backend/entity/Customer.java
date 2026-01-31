@@ -13,9 +13,15 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @Column(unique = true)
     private String cpf;
+
     private String cep;
     private String logradouro;
+    private String bairro;
     private String cidade;
+    private String estado;
 }

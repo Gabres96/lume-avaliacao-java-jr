@@ -17,12 +17,11 @@ public class CustomerController {
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
-
         this.customerService = customerService;
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> create(@RequestBody CustomerRequest request) {
+    public ResponseEntity<CustomerResponseDTO> create(@jakarta.validation.Valid @RequestBody CustomerRequest request) {
         return ResponseEntity.ok(customerService.createCustomer(request));
     }
 
@@ -37,7 +36,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> update(@PathVariable Long id, @RequestBody CustomerRequest request) {
+    public ResponseEntity<CustomerResponseDTO> update(@PathVariable Long id, @jakarta.validation.Valid @RequestBody CustomerRequest request) {
         return ResponseEntity.ok(customerService.update(id, request));
     }
 

@@ -10,7 +10,9 @@ public class CustomerResponseDTO {
     private String cpf;
     private String cep;
     private String logradouro;
+    private String bairro;
     private String cidade;
+    private String estado;
 
     public CustomerResponseDTO(Customer customer) {
         this.id = customer.getId();
@@ -18,6 +20,8 @@ public class CustomerResponseDTO {
         this.cpf = customer.getCpf();
         this.cep = customer.getCep();
         this.logradouro = customer.getLogradouro();
+        this.bairro = customer.getBairro();
         this.cidade = customer.getCidade();
+        this.estado = customer.getEstado();
     }
 }
