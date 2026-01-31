@@ -18,6 +18,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public void register(RegisterRequest registerRequest) {
     public static void register(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             throw new RuntimeException("O E-mail já existe");
@@ -30,6 +31,8 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
     }
+    public void login(LoginRequest loginRequest) {
+
     public static void login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(()-> new RuntimeException("Credenciais invalidas"));
