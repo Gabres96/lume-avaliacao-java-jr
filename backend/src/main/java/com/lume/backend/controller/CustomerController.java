@@ -1,10 +1,10 @@
-package controller;
+package com.lume.backend.controller;
 
-import dto.CustomerRequest;
-import dto.CustomerResponseDTO;
+import com.lume.backend.dto.CustomerRequest;
+import com.lume.backend.dto.CustomerResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.CustomerService;
+import com.lume.backend.service.CustomerService;
 
 import java.util.List;
 

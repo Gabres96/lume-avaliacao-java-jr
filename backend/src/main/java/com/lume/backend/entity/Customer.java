@@ -1,4 +1,4 @@
-package entity;
+package com.lume.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

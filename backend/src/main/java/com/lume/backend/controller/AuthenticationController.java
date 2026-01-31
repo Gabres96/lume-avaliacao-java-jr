@@ -1,14 +1,14 @@
-package controller;
+package com.lume.backend.controller;
 
-import dto.AuthenticationResponse;
-import dto.LoginRequest;
-import dto.RegisterRequest;
+import com.lume.backend.dto.AuthenticationResponse;
+import com.lume.backend.dto.LoginRequest;
+import com.lume.backend.dto.RegisterRequest;
+import com.lume.backend.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import service.AuthenticationService;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,13 +22,13 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
-        authenticationService.register(registerRequest);
-        return ResponseEntity.ok(new AuthenticationResponse("Usuário registrado com sucesso"));
+        AuthenticationResponse response = authenticationService.register(registerRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
-        authenticationService.login(request);
-        return ResponseEntity.ok(new AuthenticationResponse("Login realizado"));
+        AuthenticationResponse response = authenticationService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
