@@ -19,6 +19,7 @@ public class AuthenticationService {
     }
 
     public void register(RegisterRequest registerRequest) {
+
     public static void register(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             throw new RuntimeException("O E-mail já existe");
