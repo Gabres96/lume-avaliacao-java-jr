@@ -1,11 +1,11 @@
-package service;
+package com.lume.backend.service;
 
-import dto.CustomerRequest;
-import dto.CustomerResponseDTO;
-import entity.Customer;
+import com.lume.backend.dto.CustomerRequest;
+import com.lume.backend.dto.CustomerResponseDTO;
+import com.lume.backend.entity.Customer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import repository.CustomerRepository;
+import com.lume.backend.repository.CustomerRepository;
 
 
 import java.util.List;

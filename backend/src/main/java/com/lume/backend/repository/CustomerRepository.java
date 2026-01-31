@@ -1,6 +1,6 @@
-package repository;
+package com.lume.backend.repository;
 
-import entity.Customer;
+import com.lume.backend.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

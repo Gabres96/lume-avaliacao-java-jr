@@ -1,6 +1,6 @@
-package dto;
+package com.lume.backend.dto;
 
-import entity.Customer;
+import com.lume.backend.entity.Customer;
 import lombok.Data;
 
 @Data

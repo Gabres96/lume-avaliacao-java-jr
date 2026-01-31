@@ -1,4 +1,4 @@
-package dto;
+package com.lume.backend.dto;
 
 import lombok.Data;
 

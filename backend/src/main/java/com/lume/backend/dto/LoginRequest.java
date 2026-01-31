@@ -1,13 +1,13 @@
-package dto;
+package com.lume.backend.dto;
+
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterRequest {
+public class LoginRequest {
 
-    private String name;
     private String email;
     private String password;
 }
