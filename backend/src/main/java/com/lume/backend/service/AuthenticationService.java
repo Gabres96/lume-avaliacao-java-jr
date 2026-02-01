@@ -27,16 +27,19 @@ public class AuthenticationService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        user.setRole(com.lume.backend.entity.Role.USER);
 
         userRepository.save(user);
 
         String tokenGerado = jwtUtils.generateJwtToken(user);
 
+        String refreshToken = java.util.UUID.randomUUID().toString();
+
         return new AuthenticationResponse(
                 tokenGerado,
-                java.util.UUID.randomUUID().toString(),
+                refreshToken,
                 "Bearer",
                 user.getId(),
                 user.getEmail()
