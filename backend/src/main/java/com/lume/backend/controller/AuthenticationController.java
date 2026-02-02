@@ -48,25 +48,34 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User userDetails = (User) authentication.getPrincipal();
+        String email = authentication.getName();
 
-        String jwt = jwtUtils.generateJwtToken(userDetails);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        String jwt = jwtUtils.generateJwtToken(user);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         return ResponseEntity.ok(new AuthenticationResponse(
                 jwt,
                 refreshToken.getToken(),
                 "Bearer",
-                userDetails.getId(),
-                userDetails.getEmail()
+                user.getId(),
+                user.getEmail()
         ));
     }
+
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
